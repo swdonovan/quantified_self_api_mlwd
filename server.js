@@ -6,6 +6,7 @@ const configuration = require('./knexfile')[environment]
 const database = require('knex')(configuration)
 const path = require("path");
 const Foods = require('./lib/models/foods')
+const Meals = require('./lib/models/meals')
 
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'Quantified Self API'
@@ -32,18 +33,40 @@ app.post('/api/v1/foods', (request, response) => {
   }
 
   Foods.addFood(food).then((data) => {
+    if (data.rowCount == 0) {return response.sendStatus(404)}
     food.id = data.rows[0].id
     response.status(201).json(food)
   })
 })
 
-app.delete('/api/v1/foods/:id', function(request, response){
+app.delete('/api/v1/foods/:id', (request, response) => {
   const id = request.params.id
 
   Foods.deleteFood(id).then((data) => {
+    if (data.rowCount == 0) {return response.sendStatus(404)}
     response.status(201).json(id)
   })
 })
+
+app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
+  const meal_id = request.params.meal_id
+  Meals.mealsFoods(meal_id)
+  .then((data) => {
+    if (data.rowCount == 0) {return response.sendStatus(404)}
+    response.status(201).json(data['rows']);
+  });
+});
+
+app.delete('/api/v1/meals/:meal_id/foods/:id', (request, response) => {
+  const meal_id = request.params.meal_id
+  const food_id = request.params.id
+  Meals.deleteFoodFromMeal(meal_id, food_id)
+  .then((data)=>{
+    if (data.rowCount == 0) {return response.sendStatus(404)}
+    response.status(201).send("Successfully Deleted")
+  })
+})
+
 
 if(!module.parent) {
   app.listen(app.get('port'), function() {
