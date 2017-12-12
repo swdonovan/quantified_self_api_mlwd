@@ -37,6 +37,22 @@ app.post('/api/v1/foods', (request, response) => {
   })
 })
 
+app.get('/api/v1/foods/:id', (request, response) => {
+  const id = request.params.id
+  Foods.getFood(id).then((data) => {
+    response.status(201).json(data.rows[0])
+  })
+})
+
+app.patch('/api/v1/foods/:id', (request, response) => {
+  const name = request.headers.name
+  const calories = request.headers.calories
+  const id = request.params.id
+  Foods.updateFood(id, name, calories).then((data) => {
+    response.status(201).json(data.rows[0])
+  })
+})
+
 app.delete('/api/v1/foods/:id', function(request, response){
   const id = request.params.id
 
