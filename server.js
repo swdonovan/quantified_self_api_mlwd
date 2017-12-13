@@ -35,7 +35,7 @@ app.get('/api/v1/foods', (request, response) => {
 })
 
 app.post('/api/v1/foods', (request, response) => {
-  const food = request.body;
+  const food = request.body.food;
   if (food.name == '' || food.calories == '') {
     return response.status(422).send({ error: "Make sure all properties are provided!"})
   }
@@ -55,8 +55,8 @@ app.get('/api/v1/foods/:id', (request, response) => {
 })
 
 app.patch('/api/v1/foods/:id', (request, response) => {
-  const name = request.params.name
-  const calories = request.params.calories
+  const name = request.body.food.name
+  const calories = request.body.food.calories
   const id = request.params.id
   Foods.updateFood(id, name, calories).then((data) => {
     response.status(201).json(data.rows[0])
