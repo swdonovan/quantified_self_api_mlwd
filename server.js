@@ -9,7 +9,11 @@ const path = require("path");
 const Foods = require('./lib/models/foods')
 const Meals = require('./lib/models/meals')
 
-app.use(cors())
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'Quantified Self API'
 
@@ -49,8 +53,8 @@ app.get('/api/v1/foods/:id', (request, response) => {
 })
 
 app.patch('/api/v1/foods/:id', (request, response) => {
-  const name = request.headers.name
-  const calories = request.headers.calories
+  const name = request.params.name
+  const calories = request.params.calories
   const id = request.params.id
   Foods.updateFood(id, name, calories).then((data) => {
     response.status(201).json(data.rows[0])
