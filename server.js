@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const bodyParser = require('body-parser')
 const environment = process.env.NODE_ENV || 'development'
@@ -8,6 +9,7 @@ const path = require("path");
 const Foods = require('./lib/models/foods')
 const Meals = require('./lib/models/meals')
 
+app.use(cors())
 app.set('port', process.env.PORT || 3000)
 app.locals.title = 'Quantified Self API'
 
