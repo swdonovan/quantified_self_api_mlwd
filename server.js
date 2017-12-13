@@ -81,6 +81,17 @@ app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
   });
 });
 
+
+app.post('/api/v1/meals/:meal_id/foods/:id', (request, response) => {
+  const meal_id = request.params.meal_id
+  const food_id = request.params.id
+  Meals.addFoodToMeals(meal_id, food_id)
+  .then((data)=>{
+    if (data.rowCount == 0) {return response.sendStatus(404)}
+    response.status(201).send("Successfully added food to meal")
+  })
+})
+
 app.delete('/api/v1/meals/:meal_id/foods/:id', (request, response) => {
   const meal_id = request.params.meal_id
   const food_id = request.params.id
