@@ -64,6 +64,14 @@ app.delete('/api/v1/foods/:id', (request, response) => {
   })
 })
 
+app.get('/api/v1/meals', (request, response) => {
+  Meals.allMeals()
+  .then((data) => {
+    if (data.rowCount == 0) {return response.sendStatus(404)}
+    response.json(data.rows)
+  })
+})
+
 app.get('/api/v1/meals/:meal_id/foods', (request, response) => {
   const meal_id = request.params.meal_id
   Meals.mealsFoods(meal_id)
