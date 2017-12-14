@@ -76,6 +76,9 @@ app.get('/api/v1/meals', (request, response) => {
   Meals.allMeals()
   .then((data) => {
     if (data.rowCount == 0) {return response.sendStatus(404)}
+    data.rows.forEach((element) => {
+        if (element.foods[0].id === null) {element.foods = []}
+    })
     response.json(data.rows)
   })
 })
